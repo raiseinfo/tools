@@ -1,0 +1,21 @@
+{
+  "name": "raiseinfo/tools",
+  "description": "A simple tool powered by raiseinfo.",
+  "type": "library",
+  "require": {
+    "php": "^7.4 || ^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Apoint\\Tools\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "raiseinfo",
+      "email": "you@example.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

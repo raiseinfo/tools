@@ -6,17 +6,6 @@
     "php": "^7.4 || ^8.0",
     "raiseinfo/tools": "dev-main"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/raiseinfo/tools"
-    }
-  ],
-  "scripts": {
-    "post-install-cmd": [
-      "echo 'Note: The license for raiseinfo/tools is not specified. Please check the package source for updates.'"
-    ]
-  },
   "autoload": {
     "psr-4": {
       "Apoint\\Tools\\": "src/"

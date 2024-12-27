@@ -2,4 +2,4 @@
 /runtime/
 /composer.lock
 /.env
-/vendor
+vendor

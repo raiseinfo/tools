@@ -2,6 +2,7 @@
   "name": "raiseinfo/tools",
   "description": "A simple tool powered by raiseinfo.",
   "type": "library",
+  "license": "MIT",
   "require": {
     "php": "^7.4 || ^8.0"
   },

@@ -3,31 +3,18 @@
   "description": "A simple tool powered by raiseinfo.",
   "type": "library",
   "license": "MIT",
-  "require": {
-    "php": "^7.4 || ^8.0"
-  },
   "autoload": {
-    "psr-4": {
-      "Raiseinfo\\Tools\\": "src/"
-    }
+    "files": [
+      "src/functions.php"
+    ]
   },
   "authors": [
     {
-      "name": "raiseinfo",
-      "email": "you@example.com"
+      "name": "Tianby",
+      "email": "494901823@qq.com"
     }
   ],
   "minimum-stability": "dev",
   "prefer-stable": true,
-  "require-dev": {
-    "phpunit/phpunit": "^11.5"
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Raiseinfo\\Tools\\Tests\\": "tests/"
-    }
-  },
-  "scripts": {
-    "test": "vendor/bin/phpunit"
-  }
+  "require": {}
 }

@@ -8,6 +8,7 @@ class FindLeafNodeIdsTest extends TestCase
     /**
      * 测试 findLeafNodeIds 是否正确返回所有的叶子节点 ID。
      *
+     * @covers \Raiseinfo\Tools\findLeafNodeIds
      * @return void
      */
     public function testFindLeafNodeIdsReturnsCorrectLeafIds()

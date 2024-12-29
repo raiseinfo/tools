@@ -5,6 +5,35 @@ namespace Raiseinfo\Tools;
 
 
 /**
+ * 收集树结构所有的叶子节点的ID
+ * @param array $tree 需要查找的树
+ * @param string $primaryKey 主键键名
+ * @param string $childrenKey 子节点键名
+ * @return mixed
+ */
+function findLeafNodeIds(
+    array  $tree,
+    string $primaryKey = 'id',
+    string $childrenKey = 'children'
+): array
+{
+    $leafNodeIds = [];
+
+    foreach ($tree as $node) {
+        // 如果没有 'children' 键或 'children' 数组为空，则为叶子节点
+        if (!isset($node[$childrenKey]) || empty($node[$childrenKey])) {
+            // 将叶子节点的ID添加到结果数组中
+            $leafNodeIds[] = $node[$primaryKey];
+        } else {
+            // 递归查找子节点中的叶子节点
+            $leafNodeIds = array_merge($leafNodeIds, findLeafNodeIds($node[$childrenKey], $primaryKey, $childrenKey));
+        }
+    }
+
+    return $leafNodeIds;
+}
+
+/**
  * 生成树形下拉框的选项数据
  * @param array $data 平面结构数据
  * @param int $root 根节点ID

@@ -1,14 +1,15 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-use function \Raiseinfo\Tools\getTreeSelectOptions;
+namespace Tools;
 
-class GetTreeSelectOptionsTest extends TestCase
+use PHPUnit\Framework\TestCase;
+use Raiseinfo\Tools;
+
+class ToolsGetTreeSelectOptionsTest extends TestCase
 {
     /**
      * 测试 getTreeSelectOptions 是否正确生成树形下拉框的选项数据。
      *
-     * @covers \Raiseinfo\Tools\getTreeSelectOptions
      * @return void
      */
     public function testGetTreeSelectOptionsGeneratesCorrectTree()
@@ -42,7 +43,8 @@ class GetTreeSelectOptionsTest extends TestCase
         ];
 
         // 调用函数并获取返回值
-        $result = getTreeSelectOptions($data);
+        $tools = new Tools();
+        $result = $tools->getTreeSelectOptions($data);
 
         // 断言实际结果与预期结果相等
         $this->assertEquals($expectedTree, $result, '生成的树形结构应与预期相同');
@@ -57,7 +59,6 @@ class GetTreeSelectOptionsTest extends TestCase
     /**
      * 测试空数据时的返回结果。
      *
-     * @covers \Raiseinfo\Tools\getTreeSelectOptions
      * @return void
      */
     public function testGetTreeSelectOptionsWithEmptyData()
@@ -69,7 +70,8 @@ class GetTreeSelectOptionsTest extends TestCase
         $expectedTree = [];
 
         // 调用函数并获取返回值
-        $result = getTreeSelectOptions($data);
+        $tools = new Tools();
+        $result = $tools->getTreeSelectOptions($data);
 
         // 断言实际结果与预期结果相等
         $this->assertEquals($expectedTree, $result, '空数据时应返回空数组');
@@ -84,7 +86,6 @@ class GetTreeSelectOptionsTest extends TestCase
     /**
      * 测试单节点树的情况。
      *
-     * @covers \Raiseinfo\Tools\getTreeSelectOptions
      * @return void
      */
     public function testGetTreeSelectOptionsWithSingleNode()
@@ -100,7 +101,8 @@ class GetTreeSelectOptionsTest extends TestCase
         ];
 
         // 调用函数并获取返回值
-        $result = getTreeSelectOptions($data);
+        $tools = new Tools();
+        $result = $tools->getTreeSelectOptions($data);
 
         // 断言实际结果与预期结果相等
         $this->assertEquals($expectedTree, $result, '单节点树应返回正确的树形结构');
@@ -115,7 +117,6 @@ class GetTreeSelectOptionsTest extends TestCase
     /**
      * 测试自定义键名的情况。
      *
-     * @covers \Raiseinfo\Tools\getTreeSelectOptions
      * @return void
      */
     public function testGetTreeSelectOptionsWithCustomKeys()
@@ -140,7 +141,8 @@ class GetTreeSelectOptionsTest extends TestCase
         ];
 
         // 调用函数并传递自定义键名
-        $result = getTreeSelectOptions(
+        $tools = new Tools();
+        $result = $tools->getTreeSelectOptions(
             $data,
             0,
             'node_id',   // 主键键名

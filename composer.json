@@ -1,21 +1,20 @@
 {
   "name": "raiseinfo/tools",
-  "description": "A simple tool powered by raiseinfo.",
+  "description": "A set of utility functions and classes for various tasks.",
   "type": "library",
   "license": "MIT",
-  "autoload": {
-    "files": [
-      "src/functions.php"
-    ]
-  },
   "authors": [
     {
       "name": "Tianby",
       "email": "494901823@qq.com"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "Raiseinfo\\": "src/"
+    }
+  },
   "minimum-stability": "dev",
-  "prefer-stable": true,
   "require-dev": {
     "phpunit/phpunit": "^10.5"
   }

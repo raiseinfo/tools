@@ -1,10 +1,11 @@
 <?php
 
+namespace Tools;
+
 use PHPUnit\Framework\TestCase;
+use Raiseinfo\Tools;
 
-use function \Raiseinfo\Tools\findNodeFormTree;
-
-class FindNodeFormTreeTest extends TestCase
+class ToolsFindNodeFormTreeTest extends TestCase
 {
     /**
      * 测试找到目标节点的情况。
@@ -25,7 +26,8 @@ class FindNodeFormTreeTest extends TestCase
         ];
 
         // 查找存在的节点
-        $result = findNodeFormTree($tree, 4);
+        $tools = new Tools();
+        $result = $tools->findNodeFormTree($tree, 4);
         $expected = ['id' => 4, 'label' => 'Node 4', 'children' => []];
         $this->assertEquals($expected, $result, '应找到目标节点 4');
     }
@@ -49,7 +51,8 @@ class FindNodeFormTreeTest extends TestCase
         ];
 
         // 查找不存在的节点
-        $result = findNodeFormTree($tree, 999);
+        $tools = new Tools();
+        $result = $tools->findNodeFormTree($tree, 999);
         $this->assertNull($result, '应返回 null，因为节点 999 不存在');
     }
 
@@ -64,7 +67,8 @@ class FindNodeFormTreeTest extends TestCase
         $tree = [];
 
         // 查找空树中的节点
-        $result = findNodeFormTree($tree, 1);
+        $tools = new Tools();
+        $result = $tools->findNodeFormTree($tree, 1);
         $this->assertNull($result, '空树中应返回 null');
     }
 
@@ -81,7 +85,8 @@ class FindNodeFormTreeTest extends TestCase
         ];
 
         // 查找根节点
-        $result = findNodeFormTree($tree, 1);
+        $tools = new Tools();
+        $result = $tools->findNodeFormTree($tree, 1);
         $expected = ['id' => 1, 'label' => 'Node 1', 'children' => []];
         $this->assertEquals($expected, $result, '应找到根节点 1');
     }
@@ -105,7 +110,8 @@ class FindNodeFormTreeTest extends TestCase
         ];
 
         // 查找存在节点，使用自定义键名
-        $result = findNodeFormTree($tree, 4, 'node_id', 'sub_nodes');
+        $tools = new Tools();
+        $result = $tools->findNodeFormTree($tree, 4, 'node_id', 'sub_nodes');
         $expected = ['node_id' => 4, 'node_label' => 'Node 4', 'sub_nodes' => []];
         $this->assertEquals($expected, $result, '应找到目标节点 4，使用自定义键名');
     }

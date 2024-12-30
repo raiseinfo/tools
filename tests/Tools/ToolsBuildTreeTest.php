@@ -1,15 +1,14 @@
 <?php
 
+namespace Tools;
+
 use PHPUnit\Framework\TestCase;
+use Raiseinfo\Tools;
 
-use function \Raiseinfo\Tools\buildTree;
-
-class BuildTreeTest extends TestCase
+class ToolsBuildTreeTest extends TestCase
 {
     /**
      * 测试简单的树结构。
-     *
-     * @covers \Raiseinfo\Tools\buildTree
      * @return void
      */
     public function testSimpleTree()
@@ -34,14 +33,14 @@ class BuildTreeTest extends TestCase
             ]
         ];
 
-        $result = buildTree($nodes);
+        $tools = new Tools();
+        $result = $tools->buildTree($nodes);
         $this->assertEquals($expected, $result, '应生成正确的树结构');
     }
 
     /**
      * 测试空数组的情况。
      *
-     * @covers \Raiseinfo\Tools\buildTree
      * @return void
      */
     public function testEmptyArray()
@@ -49,14 +48,14 @@ class BuildTreeTest extends TestCase
         $nodes = [];
         $expected = [];
 
-        $result = buildTree($nodes);
+        $tools = new Tools();
+        $result = $tools->buildTree($nodes);
         $this->assertEquals($expected, $result, '空数组应返回空数组');
     }
 
     /**
      * 测试单节点的情况。
      *
-     * @covers \Raiseinfo\Tools\buildTree
      * @return void
      */
     public function testSingleNode()
@@ -67,14 +66,14 @@ class BuildTreeTest extends TestCase
             ['id' => 1, 'pid' => 0, 'label' => 'Node 1', 'children' => []]
         ];
 
-        $result = buildTree($nodes);
+        $tools = new Tools();
+        $result = $tools->buildTree($nodes);
         $this->assertEquals($expected, $result, '单节点应返回正确的树结构');
     }
 
     /**
      * 测试自定义键名的情况。
      *
-     * @covers \Raiseinfo\Tools\buildTree
      * @return void
      */
     public function testCustomKeys()
@@ -94,32 +93,32 @@ class BuildTreeTest extends TestCase
             ]
         ];
 
-        $result = buildTree($nodes, 0, 'node_id', 'parent_id', 'sub_nodes');
+        $tools = new Tools();
+        $result = $tools->buildTree($nodes, 0, 'node_id', 'parent_id', 'sub_nodes');
         $this->assertEquals($expected, $result, '应生成正确的树结构，使用自定义键名');
     }
 
     /**
      * 测试节点缺少必要键的情况。
      *
-     * @covers \Raiseinfo\Tools\buildTree
      * @return void
      */
     public function testMissingKeys()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $nodes = [
             ['id' => 1, 'pid' => 0, 'label' => 'Node 1'],
             ['id' => 2, 'label' => 'Node 2']  // 缺少 pid 键
         ];
 
-        buildTree($nodes);
+        $tools = new Tools();
+        $tools->buildTree($nodes);
     }
 
     /**
      * 测试父节点不存在的情况。
      *
-     * @covers \Raiseinfo\Tools\buildTree
      * @return void
      */
     public function testNonexistentParent()
@@ -133,7 +132,8 @@ class BuildTreeTest extends TestCase
             ['id' => 1, 'pid' => 0, 'label' => 'Node 1', 'children' => []]
         ];
 
-        $result = buildTree($nodes);
+        $tools = new Tools();
+        $result = $tools->buildTree($nodes);
         $this->assertEquals($expected, $result, '应忽略不存在的父节点');
     }
 }

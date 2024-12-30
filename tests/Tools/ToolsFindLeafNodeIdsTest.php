@@ -1,14 +1,16 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-use function \Raiseinfo\Tools\findLeafNodeIds;
 
-class FindLeafNodeIdsTest extends TestCase
+namespace Tools;
+
+use PHPUnit\Framework\TestCase;
+use Raiseinfo\Tools;
+
+class ToolsFindLeafNodeIdsTest extends TestCase
 {
     /**
      * 测试 findLeafNodeIds 是否正确返回所有的叶子节点 ID。
      *
-     * @covers \Raiseinfo\Tools\findLeafNodeIds
      * @return void
      */
     public function testFindLeafNodeIdsReturnsCorrectLeafIds()
@@ -32,7 +34,8 @@ class FindLeafNodeIdsTest extends TestCase
         $expectedLeafNodeIds = [2, 4, 5, 7, 8];
 
         // 调用函数并获取返回值
-        $result = findLeafNodeIds($tree);
+        $tools = new Tools();
+        $result = $tools->findLeafNodeIds($tree);
 
         // 断言实际结果与预期结果相等
         $this->assertEquals($expectedLeafNodeIds, $result, '叶子节点 ID 应该匹配');

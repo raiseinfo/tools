@@ -31,8 +31,8 @@ class Audios
 
         try {
             // 创建临时文件用于处理音频
-            $tempLocal = tempnam(sys_get_temp_dir(), 'audio_local');
-            $tempOutput = tempnam(sys_get_temp_dir(), 'audio_output');
+            $tempLocal = tempnam(sys_get_temp_dir(), 'audio_local_' . time());
+            $tempOutput = tempnam(sys_get_temp_dir(), 'audio_output_' . time());
 
             if ($tempLocal === false || $tempOutput === false) {
                 throw new \RuntimeException('Failed to create temporary files.');
@@ -50,9 +50,6 @@ class Audios
                 $duration,
                 escapeshellarg($tempOutput)
             );
-
-            echo "命令行为：\n";
-            echo $cmd . "\n";
 
             // 执行命令
             exec($cmd, $output, $returnVar);
@@ -103,7 +100,7 @@ class Audios
             // 如果是远程URL，先下载文件到临时目录
             if (filter_var($url, FILTER_VALIDATE_URL)) {
                 $content = self::getFileContent($url);
-                $tempFile = tempnam(sys_get_temp_dir(), 'audio_duration');
+                $tempFile = tempnam(sys_get_temp_dir(), 'audio_duration_' . time());
                 if ($tempFile === false) {
                     throw new \RuntimeException('Failed to create temporary file.');
                 }

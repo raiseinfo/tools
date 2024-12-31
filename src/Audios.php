@@ -43,9 +43,18 @@ class Audios
                 throw new \RuntimeException('Failed to write temporary file.');
             }
 
+            $os = PHP_OS;
+            if (stripos($os, 'WIN') !== false) {
+                $ffmpegPath = 'C:/ffmpeg/bin/ffmpeg.exe';
+            }
+            if (stripos($os, 'LINUX') !== false) {
+                $ffmpegPath = '/usr/local/bin/ffmpeg';
+            }
+
             // 构建 ffmpeg 命令并防止命令注入
             $cmd = sprintf(
-                'ffmpeg -y -i %s -af "silenceremove=start_periods=1:start_duration=1:start_threshold=-50dB:detection=peak,areverse,silenceremove=start_periods=1:start_duration=1:start_threshold=-50dB:detection=peak,areverse" -ar 16000 -b:a 64k -t %d -f mp3 %s',
+                '%s -y -i %s -af "silenceremove=start_periods=1:start_duration=1:start_threshold=-50dB:detection=peak,areverse,silenceremove=start_periods=1:start_duration=1:start_threshold=-50dB:detection=peak,areverse" -ar 16000 -b:a 64k -t %d -f mp3 %s',
+                escapeshellarg($ffmpegPath),
                 escapeshellarg($tempLocal),
                 $duration,
                 escapeshellarg($tempOutput)
@@ -99,7 +108,7 @@ class Audios
         try {
             // 如果是远程URL，先下载文件到临时目录
             if (filter_var($url, FILTER_VALIDATE_URL)) {
-                $content = self::getFileContent($url);
+                $content = $this->getFileContent($url);
                 $tempFile = tempnam(sys_get_temp_dir(), 'audio_duration_' . time());
                 if ($tempFile === false) {
                     throw new \RuntimeException('Failed to create temporary file.');
@@ -112,8 +121,22 @@ class Audios
                 $tempFile = $url;
             }
 
+            $os = PHP_OS;
+            if (stripos($os, 'WIN') !== false) {
+                $ffmpegPath = 'C:/ffmpeg/bin/ffmpeg.exe';
+                $ffprobePath = 'C:/ffmpeg/bin/ffprobe.exe';
+            }
+            if (stripos($os, 'LINUX') !== false) {
+                $ffmpegPath = '/usr/local/bin/ffmpeg';
+                $ffprobePath = '/usr/local/bin/ffprobe';
+            }
+
             // 构建命令行并防止命令注入
-            $cmd = sprintf('ffprobe -i %s -show_entries format=duration -v quiet -of csv="p=0"', escapeshellarg($tempFile));
+            $cmd = sprintf(
+                '%s -i %s -show_entries format=duration -v quiet -of csv="p=0"',
+                escapeshellarg($ffprobePath),
+                escapeshellarg($tempFile)
+            );
 
             // 执行命令并获取输出
             $output = shell_exec($cmd);

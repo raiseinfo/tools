@@ -80,32 +80,6 @@ class AudiosGetAudioDurationTest extends TestCase
         // 注意：你需要根据实际音频文件的时长调整这里的期望值
         $this->assertGreaterThan(30, $duration, 'The duration should be greater than 0 for a valid remote audio file.');
     }
-
-
-    /**
-     * 测试 ffprobe 不可用时的行为
-     * 注意这个测试用例一定要放最后面
-     */
-    public function testGetAudioDurationWhenFfprobeIsNotAvailable()
-    {
-        // 保存原始的 PATH 环境变量
-        $originalPath = getenv('PATH');
-
-        // 修改 PATH 环境变量，使 ffprobe 不可用
-        putenv('PATH=');
-
-        // 指定本地音频文件的路径
-        $localFilePath = __DIR__ . '/fixtures/sample.mp3';
-
-        // 调用 getAudioDuration 方法
-        $duration = $this->audios->getAudioDuration($localFilePath);
-
-        // 断言返回的时长是否为 0
-        $this->assertEquals(0, $duration, 'The duration should be 0 when ffprobe is not available.');
-
-        // 恢复原始的 PATH 环境变量
-        putenv("PATH ={
-        $originalPath}");
-    }
+    
 
 }

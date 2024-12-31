@@ -4,9 +4,44 @@ namespace Raiseinfo;
 
 class Tools
 {
-    public function help()
+
+    /**
+     * 递归的删除某个目录
+     * @param $dirPath
+     * @return bool
+     */
+    function deleteDir($dirPath): bool
     {
-        return "this is a helper!";
+        // 检查给定路径是否为有效的目录
+        if (!is_dir($dirPath)) {
+            throw new \InvalidArgumentException("$dirPath 不是一个有效的目录");
+        }
+
+        // 创建迭代器遍历目录
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dirPath, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        // 遍历目录中的每一个文件和子目录
+        foreach ($iterator as $file) {
+            // 获取文件或目录的路径
+            $path = $file->getPathname();
+
+            // 根据是文件还是目录来决定使用 unlink 或 rmdir
+            if ($file->isDir()) {
+                rmdir($path);
+            } else {
+                unlink($path);
+            }
+        }
+
+        // 尝试删除顶级目录
+        if (!rmdir($dirPath)) {
+            throw new \RuntimeException("无法删除目录: $dirPath");
+        }
+
+        return true;
     }
 
     /*********************************************生成树形下拉框的选项数据********************************************/

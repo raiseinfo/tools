@@ -69,27 +69,41 @@ class Tools
     /*********************************************收集树结构所有的叶子节点的ID********************************************/
     /**
      * 收集树结构所有的叶子节点的ID
-     * @param array $tree 需要查找的树
+     * 叶子节点是指没有children的或者children为空的所有子节点
+     * @param array $treeChildren 需要查找的树根下的Children
      * @param string $primaryKey 主键键名
      * @param string $childrenKey 子节点键名
      * @return mixed
      */
     public function findLeafNodeIds(
-        array  $tree,
+        array  $treeChildren,
         string $primaryKey = 'id',
         string $childrenKey = 'children'
     ): array
     {
         $leafNodeIds = [];
+        // 获取树根下的children
+        foreach ($treeChildren as $node) {
+            // 检查当前节点是否为数组
+            if (!is_array($node)) {
+                continue; // 如果不是数组，跳过该节点
+            }
 
-        foreach ($tree as $node) {
+            // 检查主键是否存在且为整数
+            if (!isset($node[$primaryKey]) || !is_int($node[$primaryKey])) {
+                continue; // 如果主键不存在或不是整数，跳过该节点
+            }
+
             // 如果没有 'children' 键或 'children' 数组为空，则为叶子节点
             if (!isset($node[$childrenKey]) || empty($node[$childrenKey])) {
                 // 将叶子节点的ID添加到结果数组中
                 $leafNodeIds[] = $node[$primaryKey];
             } else {
-                // 递归查找子节点中的叶子节点
-                $leafNodeIds = array_merge($leafNodeIds, $this->findLeafNodeIds($node[$childrenKey], $primaryKey, $childrenKey));
+                // 确保子节点是一个数组
+                if (is_array($node[$childrenKey])) {
+                    // 递归查找子节点中的叶子节点
+                    $leafNodeIds = array_merge($leafNodeIds, $this->findLeafNodeIds($node[$childrenKey], $primaryKey, $childrenKey));
+                }
             }
         }
 

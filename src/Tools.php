@@ -44,6 +44,9 @@ class Tools
         return true;
     }
 
+
+
+
     /*********************************************生成树形下拉框的选项数据********************************************/
     /**
      * 生成树形下拉框的选项数据
@@ -98,6 +101,39 @@ class Tools
         }
 
         return $tree;
+    }
+
+
+    /**
+     * 从平面结构的树形数据中获得指定ID的所有子项目的ID的数组
+     * @param array $data 平面数据
+     * @param int $parentId 要搜索的父ID
+     * @param string $primaryKey 主键字段名
+     * @param string $foreign_key 外键字段名
+     * @return array
+     */
+    public function findChildren(
+        array  $data,
+        int    $parentId,
+        string $primaryKey = 'id',
+        string $foreign_key = 'pid'
+    ): array
+    {
+        $result = [];
+
+        foreach ($data as $item) {
+            // 如果当前项的外键等于给定的父ID
+            if (isset($item[$foreign_key]) && $item[$foreign_key] == $parentId) {
+                // 将当前项的主键添加到结果数组中
+                $result[] = $item[$primaryKey];
+                // 递归查找当前项的子项
+                $children = $this->findChildren($data, $item[$primaryKey], $primaryKey, $foreign_key);
+                // 将子项的结果合并到结果数组中
+                $result = array_merge($result, $children);
+            }
+        }
+
+        return $result;
     }
 
 

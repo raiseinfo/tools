@@ -228,6 +228,7 @@ class Tools
      *
      * @param array $nodes 平面结构数据
      * @param int $root 根节点ID，默认为 0
+     * @param bool $alwaysChildren 每个元素是否都构建 children 字段
      * @param string $primaryKey 主键键名，默认为 'id'
      * @param string $foreignKey 外键键名，默认为 'pid'
      * @param string $childrenKey 子节点键名，默认为 'children'
@@ -235,6 +236,7 @@ class Tools
      */
     public function buildTree(
         array  $nodes,
+        bool $alwaysChildren = true,
         int    $root = 0,
         string $primaryKey = 'id',
         string $foreignKey = 'pid',
@@ -282,7 +284,7 @@ class Tools
         }
 
         // 递归为每个根节点添加子节点
-        return $this->addChildrenRecursively($tree, $lookup, $primaryKey, $childrenKey);
+        return $this->addChildrenRecursively($tree, $lookup, $alwaysChildren, $primaryKey, $childrenKey);
     }
 
     /**
@@ -290,15 +292,22 @@ class Tools
      *
      * @param array $nodes 当前层级的节点数组
      * @param array $lookup 所有节点的哈希表
+     * @param bool $alwaysChildren 每个节点是否都有 children
      * @param string $primaryKey 主键键名
      * @param string $childrenKey 子节点键名
      * @return array 返回带有子节点的树结构
      */
-    private function addChildrenRecursively(array $nodes, array $lookup, string $primaryKey, string $childrenKey): array
+    private function addChildrenRecursively(
+        array  $nodes,
+        array  $lookup,
+        bool   $alwaysChildren = true,
+        string $primaryKey = 'id',
+        string $childrenKey = 'children'
+    ): array
     {
         foreach ($nodes as &$node) {
             // 确保每个节点都有 children 键，即使它为空
-            if (!isset($node[$childrenKey])) {
+            if (!isset($node[$childrenKey]) && $alwaysChildren) {
                 $node[$childrenKey] = [];
             }
 

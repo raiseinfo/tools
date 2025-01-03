@@ -236,7 +236,7 @@ class Tools
      */
     public function buildTree(
         array  $nodes,
-        bool $alwaysChildren = true,
+        bool   $alwaysChildren = true,
         int    $root = 0,
         string $primaryKey = 'id',
         string $foreignKey = 'pid',
@@ -300,9 +300,9 @@ class Tools
     private function addChildrenRecursively(
         array  $nodes,
         array  $lookup,
-        bool   $alwaysChildren = true,
-        string $primaryKey = 'id',
-        string $childrenKey = 'children'
+        bool   $alwaysChildren,
+        string $primaryKey,
+        string $childrenKey
     ): array
     {
         foreach ($nodes as &$node) {
@@ -313,7 +313,13 @@ class Tools
 
             // 如果当前节点有子节点，递归为每个子节点添加子节点
             if (isset($lookup[$node[$primaryKey]]) && isset($lookup[$node[$primaryKey]][$childrenKey])) {
-                $node[$childrenKey] = $this->addChildrenRecursively($lookup[$node[$primaryKey]][$childrenKey], $lookup, $primaryKey, $childrenKey);
+                $node[$childrenKey] = $this->addChildrenRecursively(
+                    $lookup[$node[$primaryKey]][$childrenKey],
+                    $lookup,
+                    $alwaysChildren,
+                    $primaryKey,
+                    $childrenKey
+                );
             }
         }
         return $nodes;

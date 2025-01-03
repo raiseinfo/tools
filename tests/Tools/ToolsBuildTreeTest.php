@@ -94,7 +94,7 @@ class ToolsBuildTreeTest extends TestCase
         ];
 
         $tools = new Tools();
-        $result = $tools->buildTree($nodes, 0, 'node_id', 'parent_id', 'sub_nodes');
+        $result = $tools->buildTree($nodes, true, 0, 'node_id', 'parent_id', 'sub_nodes');
         $this->assertEquals($expected, $result, '应生成正确的树结构，使用自定义键名');
     }
 

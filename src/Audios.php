@@ -137,6 +137,63 @@ class Audios
         }
     }
 
+    /**
+     * 检查音频文件是否有声音
+     *
+     * @param string $url 音频文件的URL或本地路径
+     * @param float $silenceThreshold 静音阈值 (dB)
+     * @param float $silenceDuration 静音持续时间 (秒)
+     * @return float 静音占比
+     */
+    public function getSilenceRatio(
+        string $url,
+        float  $silenceThreshold = -50,
+        float  $silenceDuration = 0.1
+    ): float
+    {
+        try {
+            // 下载并保存文件
+            $filePath = tempnam(sys_get_temp_dir(), 'has_audio_' . time());
+            file_put_contents($filePath, $this->getFileContent($url));
+
+            // 获取 FFmpeg 和 FFprobe 的路径
+            $ffmpegPath = $this->getExecutablePath('ffmpeg');
+            $ffprobePath = $this->getExecutablePath('ffprobe');
+
+            // 检查文件是否为空
+            if (filesize($filePath) === 0) {
+                throw new \RuntimeException("Downloaded file is empty or corrupted");
+            }
+
+            // 执行 FFmpeg 命令检测静音
+            $output = $this->executeFfmpegSilenceDetect($ffmpegPath, $filePath, $silenceThreshold, $silenceDuration);
+
+            // 获取文件的总时长
+            $totalDuration = $this->getTotalDuration($ffprobePath, $filePath);
+
+            // 如果文件总时长为 0，直接返回无声音（避免除以 0）
+            if ($totalDuration <= 0) {
+                return 1;
+            }
+
+            // 计算总的静音时间
+            $totalSilenceDuration = $this->calculateSilenceDuration($output);
+
+            // 计算静音比例
+            $silenceRatio = $totalSilenceDuration / $totalDuration;
+
+            return $silenceRatio;
+
+        } catch (\Exception $e) {
+            throw $e;
+        } finally {
+            // 确保临时文件在任何情况下都被删除
+            if (isset($filePath) && file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+    }
+
 
     /**
      * 检查音频文件是否有声音

@@ -88,8 +88,8 @@ class Audios
             }
 
             // 创建临时文件用于处理音频
-            $tempLocal = sys_get_temp_dir() . DIRECTORY_SEPARATOR . time() . '.mp3';
-            $tempOutput = sys_get_temp_dir() . DIRECTORY_SEPARATOR . time() . '.m4a';
+            $tempLocal = sys_get_temp_dir() . DIRECTORY_SEPARATOR . time() . 'local.mp3';
+            $tempOutput = sys_get_temp_dir() . DIRECTORY_SEPARATOR . time() . 'output.mp3';
 
             if ($tempLocal === false || $tempOutput === false) {
                 throw new \RuntimeException('Failed to create temporary files.');
@@ -105,7 +105,7 @@ class Audios
 
             // 构建 ffmpeg 命令并防止命令注入
             $cmd = sprintf(
-                '%s -i %s -af "silenceremove=start_periods=1:start_duration=1:start_threshold=-50dB:detection=peak,areverse,silenceremove=start_periods=1:start_duration=1:start_threshold=-50dB:detection=peak,areverse" -ar 16000 -b:a 64k -t %d %s',
+                '%s -i %s -af "silenceremove=start_periods=1:start_duration=1:start_threshold=-50dB:detection=peak,areverse,silenceremove=start_periods=1:start_duration=1:start_threshold=-50dB:detection=peak,areverse" -ar 16000 -b:a 64k -c:a libmp3lame -t %d %s',
                 escapeshellarg($ffmpegPath),
                 escapeshellarg($tempLocal),
                 $duration,

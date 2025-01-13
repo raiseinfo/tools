@@ -5,6 +5,63 @@ namespace Raiseinfo;
 class Tools
 {
 
+
+    /**
+     * 上传文件的过滤
+     * @param string $filename
+     * @return string|null
+     */
+    function uploadFilter(string $filename, array $blackList = null): ?string
+    {
+        // 定义黑名单扩展名模式
+        $blacklistPatterns = $blackList ?: [
+            '/\.php[345]?$/i',  // 匹配 .php, .php3, .php4, .php5
+            '/\.phtml$/i',      // 匹配 .phtml
+            '/\.pht$/i'         // 匹配 .pht
+        ];
+
+        // 检查文件名是否匹配黑名单中的任何模式
+        foreach ($blacklistPatterns as $pattern) {
+            if (preg_match($pattern, $filename)) {
+                return null;
+            }
+        }
+
+        // 如果没有匹配到黑名单扩展名，返回原始文件名
+        return $filename;
+    }
+
+    /**
+     * 自动安全过滤SQL语句，只允许查询语句
+     * @param $sql
+     * @return mixed|null
+     */
+    function sqlFilter(string $sql, array $blackList = []): mixed
+    {
+        // 定义黑名单关键字模式
+        $blacklistPatterns = $blackList ?: [
+            '/\binsert\s+into\b/i',         // 匹配 "INSERT INTO"
+            '/\bupdate\s+\w+\b/i',          // 匹配 "UPDATE table_name"
+            '/\bcreate\s+(table|database)\b/i',  // 匹配 "CREATE TABLE" 或 "CREATE DATABASE"
+            '/\balter\s+table\b/i',         // 匹配 "ALTER TABLE"
+            '/\bdelete\s+from\b/i',         // 匹配 "DELETE FROM"
+            '/\bdrop\s+(table|database)\b/i',// 匹配 "DROP TABLE" 或 "DROP DATABASE"
+            '/\bload_file\b/i',             // 匹配 "LOAD_FILE"
+            '/\boutfile\b/i',               // 匹配 "OUTFILE"
+            '/\bdump\b/i'                   // 匹配 "DUMP"
+        ];
+
+        // 检查 SQL 语句是否包含黑名单中的任何关键字
+        foreach ($blacklistPatterns as $pattern) {
+            if (preg_match($pattern, $sql)) {
+                return null;
+            }
+        }
+
+        // 返回原始 SQL 语句（未被过滤）
+        return $sql;
+    }
+
     /**
      * 递归的删除某个目录
      * @param $dirPath

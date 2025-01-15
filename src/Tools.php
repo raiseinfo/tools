@@ -194,6 +194,51 @@ class Tools
     }
 
 
+    /**
+     * 获取指定ID的项目的各级父类名称，从顶级到当前级用"-"连接后返回
+     * @param array $data 平面数据
+     * @param int $id 要搜索的ID
+     * @param string $primaryKey 主键字段名
+     * @param string $foreign_key 外键字段名
+     * @param string $nameKey 名称字段名
+     * @return string
+     */
+    public function findParentNames(
+        array  $data,
+        int    $id,
+        string $primaryKey = 'id',
+        string $foreign_key = 'pid',
+        string $nameKey = 'name'
+    ): string
+    {
+        $names = [];
+        $currentId = $id;
+
+        // 循环查找直至没有父节点
+        while ($currentId > 0) {
+            $found = false;
+            foreach ($data as $item) {
+                if (isset($item[$primaryKey]) && $item[$primaryKey] == $currentId) {
+                    // 如果找到了对应的项，则将其名称添加到数组中
+                    if (isset($item[$nameKey])) {
+                        array_unshift($names, $item[$nameKey]); // 在数组开头添加，以便按顺序排列
+                    }
+                    // 更新当前ID为父ID，继续循环
+                    $currentId = $item[$foreign_key];
+                    $found = true;
+                    break;
+                }
+            }
+
+            if (!$found) { // 如果未找到则退出循环
+                break;
+            }
+        }
+
+        return implode('-', $names); // 使用"-"连接所有名称并返回
+    }
+
+
     /*********************************************收集树结构所有的叶子节点的ID********************************************/
     /**
      * 收集树结构所有的叶子节点的ID
